@@ -1,4 +1,4 @@
-import {  formatearCantidad  } from '../helper';
+import {  formatearCantidad  } from '../helpers';
 
 export const ControlPresupuesto = ({  presupuesto  }) => {
   return (
