@@ -1,6 +1,6 @@
 import {  Gasto  } from './';
 
-export const ListadoGastos = ({ gastos }) => {
+export const ListadoGastos = ({ eliminarGasto , gastos  , setGastoEditar }) => {
 
 
   return (
@@ -10,7 +10,9 @@ export const ListadoGastos = ({ gastos }) => {
         {  gastos.map( (gasto)  =>  (
             <Gasto
                 key={  gasto.id }
+                eliminarGasto = { eliminarGasto }
                 gasto={ gasto }
+                setGastoEditar={ setGastoEditar }
             />
         ) ) }
     </div>

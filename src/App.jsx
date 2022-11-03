@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { Header , ListadoGastos , Modal } from './components';
 
 import { generarId } from './helpers';
@@ -15,18 +15,45 @@ export const App = () => {
 
   const [ gastos  , setGastos ] = useState([]);
 
+  const [ gastoEditar  , setGastoEditar  ] = useState({});
+
+  useEffect(()  =>  {
+    if( Object.keys(gastoEditar).length > 0 ){
+      setModal( true );
+      setTimeout(()=> {
+        setAnimarModal( true );
+      },500);
+    }
+  },[gastoEditar]);
+
   const handleNuevoGasto = () => {
     setModal( true );
+    setGastoEditar({});
 
     setTimeout(()=> {
       setAnimarModal( true );
     },500);
   }
 
-  const guardarGasto = gasto => {
-    gasto.id = generarId();
-    gasto.fecha = Date.now();
-    setGastos([...gastos, gasto]);
+  const eliminarGasto = (id) => {
+    const gastosActualizados = gastos.filter( gasto => gasto.id !== id );
+    setGastos( gastosActualizados );
+  }
+
+  const guardarGasto = (  gasto ) => {
+
+    if(gasto.id){    
+      const gastosActualizados = gastos.map(
+        gastoState => gastoState.id === gasto.id ?  gasto : gastoState );
+      setGastos(gastosActualizados);
+      setGastoEditar({});
+
+    }else{
+      //Nuevo Gasto
+      gasto.id  = generarId();
+      gasto.fecha = Date.now();
+      setGastos([...gastos,gasto]);
+    }                
 
     setAnimarModal(false);
     setTimeout(()=> {
@@ -35,8 +62,9 @@ export const App = () => {
   }
 
   return (
-    <div>      
-      <Header 
+    <div  className={ modal ? 'fijar' : '' }>
+      <Header
+        gastos={ gastos }
         presupuesto={ presupuesto }
         setPresupuesto={ setPresupuesto }
         isValidPresupuesto={ isValidPresupuesto }
@@ -46,7 +74,11 @@ export const App = () => {
       { isValidPresupuesto && (
         <>
         <main>
-          <ListadoGastos gastos = { gastos } />
+          <ListadoGastos
+            eliminarGasto = { eliminarGasto } 
+            gastos = { gastos }
+            setGastoEditar={ setGastoEditar }
+          />
         </main>
         <div className="nuevo-gasto">
           <img 
@@ -64,6 +96,8 @@ export const App = () => {
             animarModal = { animarModal }
             setAnimarModal  = { setAnimarModal }
             guardarGasto  = { guardarGasto }
+            gastoEditar = { gastoEditar }
+            setGastoEditar={ setGastoEditar }
           /> }
       
     </div>    
