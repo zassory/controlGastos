@@ -1,5 +1,6 @@
 
 
+export * from './Filtros'
 export * from './Gasto';
 export * from './Header';
 export * from './Mensaje';
